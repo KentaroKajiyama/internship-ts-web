@@ -1,8 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
-
-First, run the development server:
+# internship-ts-web
 
 ```bash
 npm run dev
@@ -14,23 +10,51 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ディレクトリ構成
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### /app
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+nextの app router で使用するページを配置するディレクトリです
 
-## Learn More
+### /const
 
-To learn more about Next.js, take a look at the following resources:
+アプリケーションで利用する定数を配置するディレクトリです
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### /domain
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+アプリケーションで利用するドメインを配置するディレクトリです
 
-## Deploy on Vercel
+### /infrastructure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+インフラストラクチャ層のコードを配置します。  
+各種clientやrepositoryはdomain層で定義されているinterfaceに依存させる形で実装します。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+バックエンドの場合は主に DB とのやりとりを repositoryで定義していましたが、 front では主に API とのやりとりを repository
+で定義します。
+
+### /ui
+
+アプリケーションで利用するUIコンポーネントを配置するディレクトリです
+
+#### /components
+
+uiコンポーネントを配置します
+
+#### /hooks
+
+カスタムフックを配置するディレクトリです
+
+#### /view_model
+
+VMを配置するディレクトリです VMは画面の状態を管理するために利用します
+
+基本的に1画面1ファイルで作成しますが例外的にglobalなVMも存在します (認証など)
+
+UseCaseを切ることも多くありますが、今回はVMがUseCaseの機能を持つ形で作成していきます
+
+## DI
+
+今回状態管理として zustand を選定しており class を利用していないため DI はなくても大丈夫です。
+
+
+

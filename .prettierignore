@@ -1,0 +1,8 @@
+.next
+.vscode
+node_modules
+**/*.md
+next-env.d.ts
+.nvmrc
+tsconfig.json
+coverage

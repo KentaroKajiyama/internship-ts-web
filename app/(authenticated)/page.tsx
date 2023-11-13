@@ -1,6 +1,10 @@
+'use client'
 import Image from 'next/image'
+import Link from 'next/link'
+import useAuthViewModel from '@/ui/view_models/auth_view_model'
 
-export default function Home() {
+export default function HomePage() {
+  const signOut = useAuthViewModel(state => state.logout)
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -107,6 +111,8 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
+        <Link href={'/login'}>login</Link>
+        <button onClick={signOut}>signOut</button>
       </div>
     </main>
   )
