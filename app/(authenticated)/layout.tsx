@@ -8,12 +8,13 @@ export default function AuthenticatedLayout({
 }: {
   children: React.ReactNode
 }) {
+  // loginしていなかったらloginページに飛ぶし、loginしているならreadyToRenderがtrueになるはず
   useSecureWithRedirect('Authenticated')
 
   const { readyToRender, signOut } = useAuthViewModel(state => {
     return {
       readyToRender: state.readyToRender,
-      signOut: state.logout,
+      signOut: state.signout,
     }
   })
 
@@ -22,7 +23,7 @@ export default function AuthenticatedLayout({
       {readyToRender ? (
         <>
           {children}
-          <button onClick={signOut}>サインアウト</button>
+          <button onClick={signOut}>Sign Out</button>
         </>
       ) : (
         <div>loading...</div>

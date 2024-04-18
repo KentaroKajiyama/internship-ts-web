@@ -4,20 +4,7 @@ import { immer } from 'zustand/middleware/immer'
 import { PAGES } from '@/const/pages'
 import { useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { login, logout, onStateChanged } from '@/infrastructure/auth/client'
-
-type State = {
-  token: string
-  isAuthenticated: boolean
-  readyToRender: boolean
-  isLoaded: boolean
-  _cancel: () => void
-}
-
-type Action = {
-  login: (credential: Credential) => Promise<void>
-  logout: () => Promise<void>
-}
+import { login, signout, onStateChanged } from '@/infrastructure/auth/client'
 
 type Credential = {
   email: string
@@ -26,13 +13,52 @@ type Credential = {
 
 type SecureLevel = 'Authenticated' | 'Guest' | 'Any'
 
+type State = {
+  token: string
+  isAuthenticated: boolean
+  readyToRender: boolean 
+  isLoaded: boolean 
+  isFetched: boolean
+  _cancel: () => void
+}
+
+type Action = {
+  setIsFetched: (flag:boolean) => void;
+  login: (credential: Credential) => Promise<void>;
+  signout: () => Promise<void>;
+}
+
+const useAuthViewModel = create<State & Action>()(
+  immer(
+    devtools((set, get) => ({
+      token: '',
+      isAuthenticated: false,
+      readyToRender: false,
+      isLoaded: false,
+      isFetched: false,
+      setIsFetched: (flag:boolean) => set(state => {state.isFetched = flag;}),
+      _cancel: () => {},
+      login: async (credential: Credential) => {
+        await login(credential.email, credential.password)
+      },
+      signout: async () => {
+        await signout()
+      },
+    }),{
+			enabled:true,
+			name: "auth view model",
+		}),
+  ),
+)
+
 export const useSecureWithRedirect = (secureLevel: SecureLevel) => {
   const router = useRouter()
   const pathName = usePathname()
-  const { isLoaded, isSignedIn } = useAuthViewModel(state => {
+  const { isLoaded, isSignedIn, isFetched } = useAuthViewModel(state => {
     return {
       isLoaded: state.isLoaded,
       isSignedIn: state.isAuthenticated,
+      isFetched: state.isFetched,
     }
   })
 
@@ -46,10 +72,10 @@ export const useSecureWithRedirect = (secureLevel: SecureLevel) => {
   }, [])
 
   useEffect(() => {
+    //認証状態がロードできたか判定する（認証されているのかされていないのか）→認証状態のロードを待つことで間違ったリダイレクトを防ぐ
     if (!isLoaded) {
       return
     }
-
     switch (secureLevel) {
       case 'Authenticated':
         if (!isSignedIn) {
@@ -62,6 +88,7 @@ export const useSecureWithRedirect = (secureLevel: SecureLevel) => {
         break
       case 'Guest':
         if (isSignedIn) {
+          if(!isFetched){return }
           router.replace(PAGES.Home.url)
         } else {
           useAuthViewModel.setState(state => {
@@ -75,27 +102,10 @@ export const useSecureWithRedirect = (secureLevel: SecureLevel) => {
         })
         break
     }
-  }, [pathName, isSignedIn, isLoaded])
+  }, [isFetched, pathName, isSignedIn, isLoaded])
 }
 
-const useAuthViewModel = create<State & Action>()(
-  immer(
-    devtools((set, get) => ({
-      token: '',
-      isAuthenticated: false,
-      readyToRender: false,
-      isLoaded: false,
-      _cancel: () => {},
-      login: async (credential: Credential) => {
-        await login(credential.email, credential.password)
-      },
-      logout: async () => {
-        await logout()
-      },
-    })),
-  ),
-)
-
+// token is got in the infrastructure/auth
 const handleStateChanged = async () => {
   const cancel = await onStateChanged(async token => {
     if (token) {

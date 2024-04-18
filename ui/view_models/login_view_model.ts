@@ -1,7 +1,9 @@
 import { immer } from 'zustand/middleware/immer'
 import { devtools } from 'zustand/middleware'
 import { create } from 'zustand'
-import { login } from '@/infrastructure/auth/client'
+import { login, signUp } from '@/infrastructure/auth/client'
+
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 type State = {
   email: string
@@ -9,6 +11,7 @@ type State = {
   password: string
   passwordError: string
   loginError: string
+  signUpError: string
 }
 
 const initialState: State = {
@@ -17,6 +20,7 @@ const initialState: State = {
   password: '',
   passwordError: '',
   loginError: '',
+  signUpError: '',
 }
 
 type Action = {
@@ -25,6 +29,7 @@ type Action = {
   validate: () => void
   reset(): void
   login(): Promise<boolean>
+  signUp(): Promise<boolean>
   hasValidationError(): boolean
 }
 
@@ -36,6 +41,7 @@ export const useLoginViewModel = create<State & Action>()(
       password: '',
       passwordError: '',
       loginError: '',
+      signUpError: '',
       setEmail: (email: string) =>
         set(state => {
           state.email = email
@@ -69,11 +75,26 @@ export const useLoginViewModel = create<State & Action>()(
           return false
         }
         const err = await login(this.email, this.password)
+        // Make user data in backend by POST
         set(state => {
           state.loginError = err
         })
         return !err
       },
-    })),
+      async signUp(): Promise<boolean> {
+        get().validate()
+        if (get().hasValidationError()) {
+          return false
+        }
+        const err = await signUp(this.email, this.password)
+        set(state => {
+          state.signUpError = err
+        })
+        return !err
+      },
+    }),{
+      enabled: true,
+      name: "login view model",
+    }),
   ),
 )

@@ -9,12 +9,6 @@ export default function GuestLayout({
   children: React.ReactNode
 }) {
   useSecureWithRedirect('Guest')
-  const { readyToRender, signOut } = useAuthViewModel(state => {
-    return {
-      readyToRender: state.readyToRender,
-      signOut: state.logout,
-    }
-  })
-
+  const readyToRender = useAuthViewModel(state => state.readyToRender)
   return <>{readyToRender ? <>{children}</> : <div>loading...</div>}</>
 }
