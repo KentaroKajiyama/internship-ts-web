@@ -3,9 +3,10 @@ import { Tag } from "@/domain/entity/entity"
 
 
 export const FetchTagsInTodo = async ( params :{ 
-  id: string, todo_id: string, getTagsByTagIds: (tagIds: string[]) => Tag[]|Error, setTagsInTodo: (tagIds: string[], tags: Tag[]) => void,
+  token: string, id: string, todo_id: string, getTagsByTagIds: (tagIds: string[]) => Tag[]|Error, setTagsInTodo: (tagIds: string[], tags: Tag[]) => void,
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const token = params.token;
   const id = params.id;
   const todo_id = params.todo_id;
   const getTagsByTagIds = params.getTagsByTagIds;
@@ -18,6 +19,9 @@ export const FetchTagsInTodo = async ( params :{
       `${apiUrl}/v1/api/${id}/todos/${todo_id}/tags`,
       {
         method: 'GET', 
+        headers:{
+          "Authorization": `Bearer ${token}`,
+        },
       }
     );
     if(!res.ok && res.status !== 500){

@@ -1,10 +1,11 @@
 import { Tag } from "@/domain/entity/entity";
 
 // Tag項目を追加する関数
-export const HandleEditTag = async (params:{
-  id: string, tag_id: string, name: string, updateTag: (tag: Tag) => void, reset: () => void,
+export const EditTag = async (params:{
+  token: string, id: string, tag_id: string, name: string, updateTag: (tag: Tag) => void, reset: () => void,
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const token = params.token;
   const id = params.id
   const tag_id = params.tag_id
   const name = params.name
@@ -22,6 +23,7 @@ export const HandleEditTag = async (params:{
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(newTag)
       }

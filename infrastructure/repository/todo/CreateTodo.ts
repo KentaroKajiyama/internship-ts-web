@@ -2,9 +2,10 @@ import { Todo } from "@/domain/entity/entity";
 
 // Todo項目を追加する関数
 export const CreateTodo = async (params:{
-  id: string, title: string, description: string, isDeletable: boolean, postTagIds: string[], addTodo: (todo: Todo) => void, reset: () => void, setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void,
+  token: string, id: string, title: string, description: string, isDeletable: boolean, postTagIds: string[], addTodo: (todo: Todo) => void, reset: () => void, setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void,
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const token = params.token;
   const id = params.id
   const title = params.title
   const description = params.description
@@ -29,6 +30,7 @@ export const CreateTodo = async (params:{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(newTodo)
       }

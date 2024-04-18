@@ -10,7 +10,7 @@ export default function SignUpPage() {
 	// const apiUrl = process.env.NEXT_PUBLIC_API_URL
 	const loginVm = useLoginViewModel()
 	const userVm = useUserViewModel()
-	const setIsFetched = useAuthViewModel(state => state.setIsFetched)
+	const {token,setIsFetched } = useAuthViewModel()
 	const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
 	async function signUp (): Promise<void> {
@@ -18,13 +18,13 @@ export default function SignUpPage() {
 			await loginVm.signUp();
 			const firebase_uid:string = await getUid();
 			// name and email is required in api 
-			console.log(`post to : ${apiUrl}/v1/api/users`)
 			const res = await fetch(
 				`${apiUrl}/v1/api/users`,
 				{
 					method: 'POST',
 					headers: {
 						"Content-Type": "application/json",
+						"Authorization": `Bearer ${token}`,
 					},
 					body: JSON.stringify({firebase_uid: firebase_uid, name: loginVm.email, email: loginVm.email})
 				}

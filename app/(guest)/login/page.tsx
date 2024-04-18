@@ -10,7 +10,7 @@ import useAuthViewModel from '@/ui/view_models/auth_view_model'
 export default function LoginPage() {
   const loginVm = useLoginViewModel()
   const userVm = useUserViewModel()
-  const setIsFetched = useAuthViewModel(state => state.setIsFetched)
+  const {token,setIsFetched } = useAuthViewModel()
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
   async function login (): Promise<void> {
@@ -21,6 +21,9 @@ export default function LoginPage() {
         `${apiUrl}/v1/api/users/${firebase_uid}`,
         {
           method: "GET",
+          headers:{
+            "Authorization": `Bearer ${token}`,
+          }
         }
       );
       if (!res.ok) {

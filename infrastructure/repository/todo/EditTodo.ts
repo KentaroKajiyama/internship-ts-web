@@ -1,10 +1,11 @@
 import { Todo } from "@/domain/entity/entity";
 
 // Todo項目を追加する関数
-export const HandleEditTodo = async (params:{
-  id: string, todo_id: string, title: string, description: string, isDeletable: boolean, postTagIds: string[], deleteTagIds: string[], updateTodo: (todo: Todo) => void, reset: () => void,
+export const EditTodo = async (params:{
+  token: string, id: string, todo_id: string, title: string, description: string, isDeletable: boolean, postTagIds: string[], deleteTagIds: string[], updateTodo: (todo: Todo) => void, reset: () => void,
 }) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const token = params.token;
   const id = params.id
   const todo_id = params.todo_id
   const title = params.title
@@ -30,6 +31,7 @@ export const HandleEditTodo = async (params:{
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(newTodo)
       }

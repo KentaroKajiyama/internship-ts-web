@@ -2,9 +2,10 @@
 import { Todo } from "@/domain/entity/entity"; 
 
 export const DeleteTodoByTodoId = async (params: {
-  id: string, todo_id: string, getTodoByTodoId: (todoId: string) => Todo|Error, setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, deleteTodoByTodoId: (todoId: string) => void
+  token: string, id: string, todo_id: string, getTodoByTodoId: (todoId: string) => Todo|Error, setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, deleteTodoByTodoId: (todoId: string) => void
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const token = params.token;
   const id = params.id;
   const todo_id = params.todo_id;
   const getTodoByTodoId = params.getTodoByTodoId
@@ -31,7 +32,8 @@ export const DeleteTodoByTodoId = async (params: {
       {
         method: 'DELETE',
         headers:{
-          "Content-Type":"application/json"
+          "Content-Type":"application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(requestDeleteTodo)
       }

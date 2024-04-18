@@ -2,9 +2,10 @@
 import { Tag } from "@/domain/entity/entity"; 
 
 export const DeleteTagsOfChecked = async (params: {
-  id: string, getIsChecked: () => Tag[], setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, resetAlertMessages: () => void, deleteIsChecked: () => void
+  token: string, id: string, getIsChecked: () => Tag[], setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, resetAlertMessages: () => void, deleteIsChecked: () => void
 }) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const token = params.token;
   const id = params.id;
   const getIsChecked = params.getIsChecked
   const setAlertMessages = params.setAlertMessages
@@ -33,7 +34,8 @@ export const DeleteTagsOfChecked = async (params: {
       {
         method: 'DELETE',
         headers:{
-          "Content-Type":"application/json"
+          "Content-Type":"application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(request)
       }

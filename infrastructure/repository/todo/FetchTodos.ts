@@ -3,9 +3,10 @@ import { Todo } from "@/domain/entity/entity"
 
 // Fetch Todos from DB
 export const FetchTodoList = async (params:{ 
-  id: string, todo_id: string, title: string, setTodos: (todos: Todo[]) => void,
+  token: string, id: string, todo_id: string, title: string, setTodos: (todos: Todo[]) => void,
 }) => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const token = params.token;
   const id = params.id
   const todo_id = params.todo_id
   const title = params.title
@@ -20,6 +21,9 @@ export const FetchTodoList = async (params:{
       `${apiUrl}/v1/api/${id}/todos/?${queryParams}`,
       {
         method: 'GET',
+        headers:{
+          "Authorization": `Bearer ${token}`,
+        },
       }
     );
     if(!res.ok){

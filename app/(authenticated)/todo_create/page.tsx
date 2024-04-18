@@ -1,4 +1,5 @@
 "use client";
+import useAuthViewModel from '@/ui/view_models/auth_view_model'
 import { useTodoViewModel } from '@/ui/view_models/todo_view_model'; 
 import { useEditTodoViewModel } from '@/ui/view_models/edit_todo_view_model';
 import { useUserViewModel } from '@/ui/view_models/user_view_model';
@@ -7,11 +8,13 @@ import Link from 'next/link';
 import { CreateTodo } from '@/infrastructure/repository/todo/CreateTodo';
 
 export default function CreateTodoPage() {
+  const { token } = useAuthViewModel()
   const id = useUserViewModel(state => state.user.id);
   const { addTodo } = useTodoViewModel();
   const { title, description, isDeletable, setTitle, setDescription, setIsDeletable, reset, tagsInTodo, postTagIds, showAlertMessages, alertMessages, setAlertMessages, setShowAlert, resetAlertMessages} = useEditTodoViewModel();
   // Add 1 Todo
   const CreateTodoParams = {
+    token: token,
     id: id,
     title: title,
     description: description,

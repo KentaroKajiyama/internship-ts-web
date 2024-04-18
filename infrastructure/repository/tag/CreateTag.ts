@@ -1,9 +1,10 @@
 import { Tag } from "@/domain/entity/entity";
 
 export const CreateTag = async (params: {
-  id: string, name: string, addTag: (tag: Tag) => void, reset: () => void,setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void,
+  token: string, id: string, name: string, addTag: (tag: Tag) => void, reset: () => void,setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void,
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const token = params.token;
   const id = params.id;
   const name = params.name;
   const addTag = params.addTag;
@@ -20,6 +21,7 @@ export const CreateTag = async (params: {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(newTag)
     });

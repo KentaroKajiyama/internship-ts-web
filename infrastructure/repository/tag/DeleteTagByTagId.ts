@@ -2,9 +2,10 @@
 import { Tag } from "@/domain/entity/entity"; 
 
 export const DeleteTagByTagId = async (params: {
-  id: string, tag_id: string, getTagByTagId: (tagId: string) => Tag|Error, setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, resetAlertMessages: () => void, deleteTagByTagId: (tagId: string) => void
+  token: string, id: string, tag_id: string, getTagByTagId: (tagId: string) => Tag|Error, setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, resetAlertMessages: () => void, deleteTagByTagId: (tagId: string) => void
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const token = params.token;
   const id = params.id;
   const tag_id = params.tag_id;
   const getTagByTagId = params.getTagByTagId
@@ -30,7 +31,8 @@ export const DeleteTagByTagId = async (params: {
       {
         method: 'DELETE',
         headers:{
-          "Content-Type":"application/json"
+          "Content-Type":"application/json",
+          "Authorization": `Bearer ${token}`,
         },
       }
     );

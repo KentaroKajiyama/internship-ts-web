@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import useAuthViewModel from '@/ui/view_models/auth_view_model'
 import { PAGES } from '@/const/pages';
 import { useUserViewModel } from '@/ui/view_models/user_view_model';
 import { useTagViewModel } from '@/ui/view_models/tag_view_model';
@@ -11,10 +12,12 @@ import { useOnPageLeave } from '@/ui/hooks/useOnPageLeave';
 
 export default function TagEditPage () {
   // Const & View Model
+  const { token } = useAuthViewModel()
   const id = useUserViewModel(state => state.user.id);
   const { tags, alertMessages, setAlertMessages, showAlertMessages, setShowAlert, resetAlertMessages, setIsChecked, getIsChecked, deleteIsChecked, getTagByTagId, deleteTagByTagId } = useTagViewModel()
   // While on this page.
   const DeleteTagByTagIdParams = {
+    token: token,
     id: id, 
     tag_id: "", 
     getTagByTagId: getTagByTagId, 
@@ -24,6 +27,7 @@ export default function TagEditPage () {
     deleteTagByTagId: deleteTagByTagId,
   }
   const DeleteTagsOfCheckedParams = {
+    token: token,
     id: id, 
     getIsChecked: getIsChecked,
     setAlertMessages: setAlertMessages, 

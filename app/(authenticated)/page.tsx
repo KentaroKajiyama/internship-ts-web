@@ -18,6 +18,7 @@ import { useAddTagViewModel } from '@/ui/view_models/add_tag_view_model';
 
 export default function HomePage() {
   // const & View Model 
+  const { token } = useAuthViewModel()
   const id = useUserViewModel(state => state.user.id);
   const { todos, alertMessages, showAlertMessages, setTodos, getTodoByTodoId, deleteTodoByTodoId, setIsChecked, getIsChecked, deleteIsChecked, resetIsChecked, setAlertMessages, setShowAlert, resetAlertMessages, deleteTodosAlert} = useTodoViewModel()
   const editTodoVm = useEditTodoViewModel()
@@ -28,12 +29,14 @@ export default function HomePage() {
   // When loading
   // When implementing searching, you have to change todo_id and title element to refer queryVm.
   const FetchTodoListParams = {
+    token: token,
     id: id,
     todo_id: "",
     title: "",
     setTodos: setTodos,
   }
   const FetchTagListParams = {
+    token: token,
     id: id,
     tag_id: "",
     name: "",
@@ -43,6 +46,7 @@ export default function HomePage() {
   useOnPageLoad(callbacksInLoading);
   // While on this page.
   const DeleteTodoByTodoIdParams = {
+    token: token,
     id: id, 
     todo_id: "", 
     getTodoByTodoId: getTodoByTodoId, 
@@ -51,6 +55,7 @@ export default function HomePage() {
     deleteTodoByTodoId: deleteTodoByTodoId,
   }
   const DeleteTodosOfCheckedParams = {
+    token: token,
     id: id, 
     getIsChecked: getIsChecked,
     setAlertMessages: setAlertMessages, 

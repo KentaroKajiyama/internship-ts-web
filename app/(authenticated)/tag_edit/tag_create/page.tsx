@@ -1,4 +1,5 @@
 "use client";
+import useAuthViewModel from '@/ui/view_models/auth_view_model'
 import { useTagViewModel } from '@/ui/view_models/tag_view_model'; 
 import { useEditTagViewModel } from '@/ui/view_models/edit_tag_view_model';
 import { PAGES } from '@/const/pages';
@@ -8,12 +9,14 @@ import { CreateTag } from '@/infrastructure/repository/tag/CreateTag';
 import { useOnPageLeave } from '@/ui/hooks/useOnPageLeave';
 
 export default function CreateTagPage() {
+  const { token } = useAuthViewModel()
   const id = useUserViewModel(state => state.user.id);
   const { addTag }= useTagViewModel();
   const { name, setName, reset, showAlertMessages, alertMessages, setAlertMessages, setShowAlert, resetAlertMessages } = useEditTagViewModel();
 
   // While on this page
   const CreateTagParams = {
+    token: token,
     id: id,
     name: name,
     addTag: addTag,

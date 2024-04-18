@@ -3,9 +3,10 @@ import { Tag } from "@/domain/entity/entity"
 
 // Fetch Tags in Todo from DB
 export const FetchTagList = async ( params:{ 
-  id: string, tag_id: string, name: string, setTags: (tags: Tag[]) => void,
+  token: string, id: string, tag_id: string, name: string, setTags: (tags: Tag[]) => void,
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const token = params.token;
   const id = params.id
   const tag_id = params.tag_id
   const name = params.name
@@ -20,6 +21,9 @@ export const FetchTagList = async ( params:{
       `${apiUrl}/v1/api/${id}/tags/?${queryParams}`,
       {
         method: 'GET',
+        headers:{
+          "Authorization": `Bearer ${token}`,
+        },
       }
     );
     if(!res.ok){

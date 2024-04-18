@@ -1,4 +1,5 @@
 "use client";
+import useAuthViewModel from '@/ui/view_models/auth_view_model'
 import { useTodoViewModel } from '@/ui/view_models/todo_view_model'; 
 import { useEditTodoViewModel } from '@/ui/view_models/edit_todo_view_model';
 import Link from 'next/link';
@@ -8,9 +9,10 @@ import { useOnPageLeave } from '@/ui/hooks/useOnPageLeave';
 import { FetchTodoByTodoId } from '@/infrastructure/repository/todo/FetchTodoByTodoId';
 import { useOnPageLoad } from '@/ui/hooks/useOnPageLoad';
 import { FetchTagsInTodo } from '@/infrastructure/repository/tag/FetchTagsInTodo';
-import { HandleEditTodo } from '@/infrastructure/repository/todo/EditTodo';
+import { EditTodo } from '@/infrastructure/repository/todo/EditTodo';
 
 export default function EditTodoPage({ params }:{ params: { todo_id: string}}) {
+  const { token } = useAuthViewModel()
   const id = useUserViewModel(state => state.user.id);
   const { updateTodo, getTodoByTodoId, } = useTodoViewModel();
   const { title, description, isDeletable, tagsInTodo, postTagIds, deleteTagIds, setTodoId, setTitle, setDescription, setIsDeletable, reset, setTagsInTodo} = useEditTodoViewModel()
@@ -37,7 +39,8 @@ export default function EditTodoPage({ params }:{ params: { todo_id: string}}) {
   const callbacksOnLoading = [()=>FetchTodoByTodoId(FetchTodoByTodoIdParams)]//()=>FetchTagsInTodo(FetchTagsInTodoParams)]
   useOnPageLoad(callbacksOnLoading);
   // While on this page.
-  const HandleEditTodoParams = {
+  const EditTodoParams = {
+    token: token,
     id: id, 
     todo_id: todo_id,
     title: title, 
@@ -93,7 +96,7 @@ export default function EditTodoPage({ params }:{ params: { todo_id: string}}) {
         <Link href={`/todo_edit/${todo_id}/tag_delete`}><button type="button" className="bg-yellow-500 hover:bg-black-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Remove Tags</button></Link>
       </div>
       <Link href={"/tag_edit/tag_create"}><button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Create Tag</button></Link>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" onClick={() => HandleEditTodo(HandleEditTodoParams)}>Edit Todo</button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" onClick={() => EditTodo(EditTodoParams)}>Edit Todo</button>
       <Link href={"/"}><button type="button" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">リスト一覧</button></Link>
     </div>
   );

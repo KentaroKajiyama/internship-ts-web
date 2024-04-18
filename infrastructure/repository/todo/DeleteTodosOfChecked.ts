@@ -2,9 +2,10 @@
 import { Todo } from "@/domain/entity/entity"; 
 
 export const DeleteTodosOfChecked = async (params: {
-  id: string, getIsChecked: () => Todo[], setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, deleteTodosAlert: () => void, deleteIsChecked: () => void
+  token: string, id: string, getIsChecked: () => Todo[], setAlertMessages: (alertMessages: string[]) => void, setShowAlert: (isShown: boolean) => void, deleteTodosAlert: () => void, deleteIsChecked: () => void
 }) => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
+  const token = params.token;
   const id = params.id;
   const getIsChecked = params.getIsChecked
   const setAlertMessages = params.setAlertMessages
@@ -47,7 +48,8 @@ export const DeleteTodosOfChecked = async (params: {
       {
         method: 'DELETE',
         headers:{
-          "Content-Type":"application/json"
+          "Content-Type":"application/json",
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(request)
       }
